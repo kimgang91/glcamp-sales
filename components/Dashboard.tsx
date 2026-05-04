@@ -264,6 +264,17 @@ export default function Dashboard({ rows, updatedAt }: Props) {
     setReasonCat("");
   }
 
+  function toggleResultFilter(cat: ResultCategory) {
+    setResultCat((prev) => (prev === cat ? "" : cat));
+    if (typeof window !== "undefined") {
+      requestAnimationFrame(() => {
+        document
+          .getElementById("table")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }
+
   function exportCsv() {
     const headers = [
       "등급",
@@ -446,18 +457,24 @@ export default function Dashboard({ rows, updatedAt }: Props) {
           value={stats.confirmed.toLocaleString("ko-KR")}
           hint={pct(stats.confirmed)}
           accent="green"
+          onClick={() => toggleResultFilter("확정")}
+          active={resultCat === "확정"}
         />
         <StatCard
           label="검토중"
           value={stats.reviewing.toLocaleString("ko-KR")}
           hint={pct(stats.reviewing)}
           accent="blue"
+          onClick={() => toggleResultFilter("검토")}
+          active={resultCat === "검토"}
         />
         <StatCard
           label="거절"
           value={stats.rejected.toLocaleString("ko-KR")}
           hint={pct(stats.rejected)}
           accent="rose"
+          onClick={() => toggleResultFilter("거절")}
+          active={resultCat === "거절"}
         />
         <StatCard
           label="미컨택"
